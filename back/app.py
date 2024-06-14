@@ -1,8 +1,11 @@
-# backend/app.py
+import os
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 from models import db, User, Wheel
 
 app = Flask(__name__)
+CORS(app)  # Habilitar CORS para toda la aplicación
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -56,4 +59,5 @@ def get_user():
         return jsonify({"message": "User not found"}), 404
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+

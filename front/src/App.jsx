@@ -3,6 +3,8 @@ import { useState, useEffect } from "react";
 import Wheel from "./components/Wheel";
 import axios from "axios";
 
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL;
+
 const App = () => {
   const [items, setItems] = useState([]);
   const [inputValue, setInputValue] = useState("");
@@ -13,7 +15,7 @@ const App = () => {
   useEffect(() => {
     if (userId) {
       axios
-        .get(`/api/users/${userId}/wheel`)
+        .get(`${apiBaseUrl}/users/${userId}/wheel`)
         .then((response) => {
           if (response.data.items) {
             setItems(response.data.items);
@@ -34,7 +36,7 @@ const App = () => {
     setItems([]);
     if (userId) {
       axios
-        .post(`/api/users/${userId}/wheel`, { items: [] })
+        .post(`${apiBaseUrl}/users/${userId}/wheel`, { items: [] })
         .then((response) => console.log("Wheel reset"))
         .catch((error) => console.error("Error resetting wheel:", error));
     }
@@ -43,7 +45,7 @@ const App = () => {
   const handleSaveWheel = () => {
     if (userId) {
       axios
-        .post(`/api/users/${userId}/wheel`, { items })
+        .post(`${apiBaseUrl}/users/${userId}/wheel`, { items })
         .then((response) => console.log("Wheel saved"))
         .catch((error) => console.error("Error saving wheel:", error));
     }
@@ -51,7 +53,7 @@ const App = () => {
 
   const handleAddUser = () => {
     axios
-      .post("/api/users", { username })
+      .post(`${apiBaseUrl}/users`, { username })
       .then((response) => {
         setUserId(response.data.user_id);
         setMessage("User added successfully");
@@ -60,7 +62,7 @@ const App = () => {
         if (error.response && error.response.status === 400) {
           setMessage("User already exists");
           axios
-            .get(`/api/users?username=${username}`)
+            .get(`${apiBaseUrl}/users?username=${username}`)
             .then((res) => {
               setUserId(res.data.user_id);
             })
